@@ -48,6 +48,7 @@ class CategoryTableViewController: UITableViewController {
         }
         
         alert.addAction(action)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         
         present(alert, animated: true, completion: nil)
         
