@@ -14,15 +14,12 @@ class CategoryTableViewController: UITableViewController {
 
     let realm = try! Realm()
     
-    var categoryArray = [Category]()
-    
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
+    var categories : Results<Category>?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        loadData()
+        loadData()
         
     }
 
@@ -36,8 +33,6 @@ class CategoryTableViewController: UITableViewController {
             
             let newCategory = Category()
             newCategory.name = textField.text!
-            
-            self.categoryArray.append(newCategory)
             
             self.saveData(category: newCategory)
             
@@ -59,16 +54,14 @@ class CategoryTableViewController: UITableViewController {
     //MARK: - TableView Datasource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categoryArray.count
+        return categories?.count ?? 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
         
-        let category = categoryArray[indexPath.row]
-        
-        cell.textLabel?.text = category.name
+        cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories Added Yet"
         
         return cell
     }
@@ -84,7 +77,7 @@ class CategoryTableViewController: UITableViewController {
         let destinationVC = segue.destination as! TodoListViewController
         
         if let indexPath = tableView.indexPathForSelectedRow {
-            destinationVC.selectedCategory = categoryArray[indexPath.row]
+            destinationVC.selectedCategory = categories?[indexPath.row]
         }
     }
     
@@ -104,43 +97,41 @@ class CategoryTableViewController: UITableViewController {
         tableView.reloadData()
     }
     
-//    func loadData(with request: NSFetchRequest<Category> = Category.fetchRequest() ) {
-//        do {
-//            categoryArray = try context.fetch(request)
-//        }
-//        catch {
-//            print("Error: \(error)")
-//        }
-//
-//        tableView.reloadData()
-//    }
+    func loadData() {
+        
+        categories = realm.objects(Category.self)
+        
+        tableView.reloadData()
+        
+        
+    }
     
     
 }
 
 
 //extension CategoryTableViewController: UISearchBarDelegate {
-//    
+//
 //    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
 //        let request : NSFetchRequest<Category> = Category.fetchRequest()
-//        
+//
 //        request.predicate = NSPredicate(format: "name CONTAINS[cd] %@", searchBar.text!)
-//        
+//
 //        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-//        
+//
 //        loadData(with: request)
 //    }
-//    
+//
 //    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
 //        if searchBar.text?.count == 0 {
 //            loadData()
-//            
+//
 //            DispatchQueue.main.async {
 //                searchBar.resignFirstResponder()
 //            }
 //        }
 //    }
-//    
+//
 //}
 
 
