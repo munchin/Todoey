@@ -20,6 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         print(Realm.Configuration.defaultConfiguration.fileURL!)
 
+//        UINavigationBar.appearance().tintColor = UIColor.white
+        
         do {
             let realm = try Realm()
         }
